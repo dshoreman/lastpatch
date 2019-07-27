@@ -15,7 +15,7 @@ main() {
 
 prune() {
     echo "Pruning old extracted files... "
-    rm -rf ${tmpdir} && mkdir ${tmpdir}
+    echo "Removed ~$(rm -rvf ${tmpdir} | wc -l) files and directories" && mkdir ${tmpdir}
 }
 
 fetch() {
