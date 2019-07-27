@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+set -Eeo pipefail
+
+trap 'echo -e "\nAborted due to error" && exit 1' ERR
+trap 'echo -e "\nAborted by user" && exit 1' SIGINT
+
 pkgname=lastpass
 pkgver=4.29.0.4
 tmpdir="./extracted/"
