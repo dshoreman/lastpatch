@@ -14,6 +14,8 @@ main() {
 
     prune
     fetch
+    patch
+    rebuild
 
     echo "Done!"
 }
@@ -29,6 +31,35 @@ fetch() {
     echo "Fetching LastPass..."
     wget --show-progress -qO "${filename}" "https://addons.mozilla.org/firefox/downloads/file/3019318/" \
         && echo "Extracting contents of LastPass XPI file..." && unzip -qqo "${filename}" -d "${tmpdir}"
+}
+
+patch() {
+    echo
+    echo "LET THE PATCHING BEGIN!"
+    echo
+
+    echo "Tweaking the name so it can easily be identified..."
+    sed -i -E "s/^(\t\"name\":) \"(.*)(\",?)$/\1 \"\2 (Patched)\",/" extracted/manifest.json
+    sed -i -E "s/^(\t\"short_name\":) \"(.*): .*(\",?)$/\1 \"\2 (Patched)\3/" extracted/manifest.json
+
+    echo "Setting a unique Extension ID for AMO based on your hostname..."
+    sed -i -E "s/^(\t{3}\"id\": )\".*(\",?)$/\1\"${pkgname}@$(hostname)\2/" extracted/manifest.json
+
+    echo "Setting min Firefox version to clean majority of AMO warnings..."
+    sed -i -E "s/^(\t{3}\"strict_min_version\":) \".*(\",?)$/\1\"57.0\2/" extracted/manifest.json
+
+    echo "Patching complete"
+}
+
+rebuild() {
+    echo "Cloning existing XPI..."
+    cp "in/${pkgname}-${pkgver}.xpi" "out/lastpass_custom-${pkgver}.xpi"
+
+    echo "Updating archive..."
+    cd ./extracted/
+    zip -qur "../out/lastpass_custom-${pkgver}.xpi" ./*
+
+    cd ..
 }
 
 main
