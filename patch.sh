@@ -42,6 +42,13 @@ patch() {
     sed -i -E "s/^(\t\"name\":) \"(.*)(\",?)$/\1 \"\2 (Patched)\",/" extracted/manifest.json
     sed -i -E "s/^(\t\"short_name\":) \"(.*): .*(\",?)$/\1 \"\2 (Patched)\3/" extracted/manifest.json
 
+    if [ -z "${VERSION_SUFFIX}" ]; then
+        echo "Skipping version patch, no VERSION_SUFFIX given"
+    else
+        echo "Patching version to append '${VERSION_SUFFIX}'..."
+        sed -i -E "s/^(\t\"version\": )(\".*)(\",?)$/\1\2${VERSION_SUFFIX}\3/" extracted/manifest.json
+    fi
+
     echo "Setting a unique Extension ID for AMO based on your hostname..."
     sed -i -E "s/^(\t{3}\"id\": )\".*(\",?)$/\1\"${pkgname}@$(hostname)\2/" extracted/manifest.json
 
@@ -53,7 +60,7 @@ patch() {
 
 rebuild() {
     echo "Cloning existing XPI..."
-    cp "in/${pkgname}-${pkgver}.xpi" "out/lastpass_custom-${pkgver}.xpi"
+    cp "in/${pkgname}-${pkgver}.xpi" "out/lastpass_custom-${pkgver}${VERSION_SUFFIX}.xpi"
 
     echo "Updating archive..."
     cd ./extracted/
