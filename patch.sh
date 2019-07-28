@@ -59,12 +59,14 @@ patch() {
 }
 
 rebuild() {
+    local xpi="out/lastpass_patched-${pkgver}${VERSION_SUFFIX}-unsigned.xpi"
+
     echo "Cloning existing XPI..."
-    cp "in/${pkgname}-${pkgver}.xpi" "out/lastpass_custom-${pkgver}${VERSION_SUFFIX}.xpi"
+    cp "in/${pkgname}-${pkgver}.xpi" "${xpi}"
 
     echo "Updating archive..."
     cd ./extracted/
-    zip -qur "../out/lastpass_custom-${pkgver}.xpi" ./*
+    zip -qur "../${xpi}" ./*
 
     cd ..
 }
