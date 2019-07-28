@@ -55,7 +55,25 @@ patch() {
     echo "Setting min Firefox version to clean majority of AMO warnings..."
     sed -i -E "s/^(\t{3}\"strict_min_version\":) \".*(\",?)$/\1\"57.0\2/" extracted/manifest.json
 
+    echo "Applying file patches..."
+    cd ./patches
+    for file in *.css; do
+        echo "> ./patches/${file}"
+        patch_file "${file}"
+    done
+    cd ..
+
     echo "Patching complete"
+}
+
+patch_file() {
+    local file="$1"
+
+    {
+        echo -e "\n\n/**\n * BEGIN PATCHES\n */\n"
+        cat "${file}" >> "../extracted/${file}"
+        echo -e "\n/**\n * END PATCHES\n */"
+    } >> "../extracted/${file}"
 }
 
 rebuild() {
