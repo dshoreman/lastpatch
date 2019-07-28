@@ -26,4 +26,19 @@ $ VERSION_SUFFIX="01" /path/to/patch.sh
 
 This will append "01" to the current version, resulting in e.g. `4.32.0.201`.
 
+## Patches
+
+Currently the following elements are patched:
+
+#### Manifest
+* Includes "Patched" in the add-on name to easily identify it in Add-ons Manager
+* Sets the version (if needed)
+* Generates an ID based on your hostname
+* Bumps `strict_min_version` to 57 to clear a ton of AMO warnings
+
+#### In-field Generate Password Dialog
+* Password length label: increased contrast
+* Password length input: colour set to black
+* Generated password: colour set to black
+
 [AMO Developer Hub]: https://addons.mozilla.org/developers
