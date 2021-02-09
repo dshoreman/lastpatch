@@ -6,7 +6,7 @@ trap 'echo -e "\nAborted due to error" && exit 1' ERR
 trap 'echo -e "\nAborted by user" && exit 1' SIGINT
 
 pkgname=lastpass
-pkgver=4.29.0.4
+pkgver=4.64.0.3
 tmpdir="./extracted/"
 
 main() {
@@ -29,7 +29,7 @@ fetch() {
     local filename="in/${pkgname}-${pkgver}.xpi"
 
     echo "Fetching LastPass..."
-    wget --show-progress -qO "${filename}" "https://addons.mozilla.org/firefox/downloads/file/3019318/" \
+    wget --show-progress -qO "${filename}" "https://addons.mozilla.org/firefox/downloads/file/3719125/" \
         && echo "Extracting contents of LastPass XPI file..." && unzip -qqo "${filename}" -d "${tmpdir}"
 }
 
@@ -53,7 +53,7 @@ patch() {
     sed -i -E "s/^(\t{3}\"id\": )\".*(\",?)$/\1\"${pkgname}@$(hostname)\2/" extracted/manifest.json
 
     echo "Setting min Firefox version to clean majority of AMO warnings..."
-    sed -i -E "s/^(\t{3}\"strict_min_version\":) \".*(\",?)$/\1\"57.0\2/" extracted/manifest.json
+    sed -i -E "s/^(\t{3}\"strict_min_version\":) \".*(\",?)$/\1\"80.0\2/" extracted/manifest.json
 
     echo "Applying file patches..."
     cd ./patches
@@ -83,8 +83,10 @@ rebuild() {
     cp "in/${pkgname}-${pkgver}.xpi" "${xpi}"
 
     echo "Updating archive..."
-    cd ./extracted/
-    zip -qur "../${xpi}" ./*
+    cd ./extracted/ && zip -qur "../${xpi}" ./* && cd ..
+
+    echo "Dropping mozilla-recommendation (reserved filename)..."
+    zip -d "./${xpi}" mozilla-recommendation.json
 
     cd ..
 }
