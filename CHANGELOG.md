@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+* New patch for note dialog that sets a darker page background
+* Applied previous in-field passgen patches to extension dialog
+  * These escaped the original release and may no longer be required
+### Changed
+* Updated LastPass source XPI to latest version
 
 
 ## [0.1.0] - 2019-07-28
